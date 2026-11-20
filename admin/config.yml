@@ -1,0 +1,628 @@
+backend:
+  name: github
+  repo: OWNER/cuarta-iteracion
+  branch: main
+  site_domain: cuarta-iteracion.netlify.app
+  auth_scope: public_repo
+  open_authoring: true
+site_url: https://cuarta-iteracion.netlify.app
+display_url: https://cuarta-iteracion.netlify.app
+publish_mode: editorial_workflow
+slug:
+  encoding: ascii
+  clean_accents: true
+  lowercase: true
+  sanitize_replacement: "-"
+media_folder: assets/images
+public_folder: assets/images
+output:
+  omit_empty_optional_fields: true
+collections:
+  - name: textos
+    label: Textos
+    label_singular: Texto
+    folder: textos
+    create: true
+    extension: md
+    format: frontmatter
+    identifier_field: title
+    media_folder: /assets/images
+    public_folder: ../assets/images
+    slug: "{{slug}}"
+    path: "{{creator.0 | slugify}}/{{slug}}"
+    nested:
+      depth: 2
+      subfolders: false
+      summary: "{{dirname}} / {{title}}"
+    filter:
+      field: type
+      value: file
+    preview_path: textos/{{dirname}}/{{filename}}.html
+    summary: "{{title}} — {{creator}}"
+    sortable_fields:
+      - date
+      - title
+      - creator
+    fields:
+      - name: title
+        label: Título
+        widget: string
+        required: true
+      - name: subtitle
+        label: Subtítulo
+        widget: string
+        required: false
+      - name: creator
+        label: Autora
+        widget: relation
+        collection: creadoras
+        value_field: name
+        search_fields:
+          - name
+        display_fields:
+          - name
+        dropdown_threshold: 0
+        multiple: true
+        required: true
+      - name: body
+        label: Texto
+        widget: markdown
+        modes:
+          - raw
+        required: true
+      - name: date
+        label: Fecha
+        widget: datetime
+        type: date
+        required: false
+        preview: false
+      - name: keywords
+        label: Palabras clave
+        widget: relation
+        collection: palabras_clave
+        value_field: name
+        search_fields:
+          - name
+        display_fields:
+          - name
+        dropdown_threshold: 0
+        multiple: true
+        required: false
+        preview: false
+      - name: license
+        label: Licencia
+        widget: select
+        required: false
+        dropdown_threshold: 0
+        options: &a1
+          - label: Usar la licencia global
+            value: ""
+          - label: CC BY-NC-ND 4.0
+            value: CC-BY-NC-ND-4.0
+          - label: PF-AC-PR-FA-1.0
+            value: PF-AC-PR-FA-1.0
+        preview: false
+      - name: language
+        label: Idioma
+        widget: select
+        required: false
+        dropdown_threshold: 0
+        options:
+          - label: Usar el idioma global
+            value: ""
+          - label: Español (México)
+            value: es-MX
+        preview: false
+      - name: slug
+        label: Slug
+        widget: string
+        required: false
+        pattern:
+          - ^[a-z0-9]+(?:-[a-z0-9]+)*$
+          - Solo minúsculas, números y guiones
+        hint: Opcional. Si lo dejas vacío, la CLI lo genera con el título.
+        preview: false
+      - name: type
+        label: Tipo
+        widget: hidden
+        default: file
+  - name: creadoras
+    label: Creadoras
+    label_singular: Creadora
+    folder: textos
+    create: true
+    extension: md
+    format: frontmatter
+    identifier_field: name
+    media_folder: /assets/images
+    public_folder: ../assets/images
+    slug: "{{slug}}"
+    nested:
+      depth: 2
+      subfolders: true
+      summary: "{{name}}"
+    meta:
+      path:
+        index_file: creadora
+    filter:
+      field: type
+      value: creator
+    preview_path: textos/{{fields.slug}}/{{fields.slug}}.html
+    summary: "{{name}}"
+    fields:
+      - name: name
+        label: Nombre
+        widget: string
+        required: true
+      - name: body
+        label: Semblanza
+        widget: markdown
+        modes:
+          - raw
+        required: true
+      - name: image
+        label: Retrato
+        widget: image
+        required: false
+        preview: false
+      - name: links
+        label: Enlaces
+        widget: list
+        required: false
+        label_singular: Enlace
+        fields:
+          - name: name
+            label: Nombre
+            widget: string
+          - name: url
+            label: URL
+            widget: string
+        preview: false
+      - name: slug
+        label: Slug
+        widget: string
+        required: false
+        pattern:
+          - ^[a-z0-9]+(?:-[a-z0-9]+)*$
+          - Solo minúsculas, números y guiones
+        hint: Opcional. Si lo dejas vacío, la CLI lo genera con el título.
+        preview: false
+      - name: type
+        label: Tipo
+        widget: hidden
+        default: creator
+  - name: colecciones
+    label: Colecciones
+    label_singular: Colección
+    folder: colecciones
+    create: true
+    extension: md
+    format: frontmatter
+    identifier_field: title
+    media_folder: /assets/images
+    public_folder: ../assets/images
+    slug: "{{slug}}"
+    filter:
+      field: type
+      value: collection
+    preview_path: colecciones/{{filename}}.html
+    summary: "{{title}}"
+    fields:
+      - name: title
+        label: Título
+        widget: string
+        required: false
+        hint: Si se deja vacío, la CLI usará «Sin título».
+      - name: subtitle
+        label: Subtítulo
+        widget: string
+        required: false
+      - name: collectionCreatorPrefix
+        label: Rol de la antologadora
+        widget: string
+        required: false
+      - name: collectionCreator
+        label: Antologadora
+        widget: relation
+        collection: creadoras
+        value_field: name
+        search_fields:
+          - name
+        display_fields:
+          - name
+        dropdown_threshold: 0
+        multiple: true
+        required: false
+      - name: body
+        label: Texto
+        widget: markdown
+        modes:
+          - raw
+        required: false
+      - name: date
+        label: Fecha
+        widget: datetime
+        type: date
+        required: false
+        preview: false
+      - name: keywords
+        label: Palabras clave
+        widget: relation
+        collection: palabras_clave
+        value_field: name
+        search_fields:
+          - name
+        display_fields:
+          - name
+        dropdown_threshold: 0
+        multiple: true
+        required: false
+        preview: false
+      - name: license
+        label: Licencia
+        widget: select
+        required: false
+        dropdown_threshold: 0
+        options: *a1
+        preview: false
+      - name: language
+        label: Idioma
+        widget: select
+        required: false
+        dropdown_threshold: 0
+        options:
+          - label: Usar el idioma global
+            value: ""
+          - label: Español (México)
+            value: es-MX
+        preview: false
+      - name: files
+        label: Textos incluidos
+        widget: list
+        required: true
+        label_singular: Texto
+        hint: "Rutas relativas al repositorio, por ejemplo: textos/mi-texto.md."
+        preview: false
+      - name: slug
+        label: Slug
+        widget: string
+        required: false
+        pattern:
+          - ^[a-z0-9]+(?:-[a-z0-9]+)*$
+          - Solo minúsculas, números y guiones
+        hint: Opcional. Si lo dejas vacío, la CLI lo genera con el título.
+        preview: false
+      - name: type
+        label: Tipo
+        widget: hidden
+        default: collection
+  - name: anuncios
+    label: Anuncios
+    label_singular: Anuncio
+    folder: anuncios
+    create: true
+    extension: md
+    format: frontmatter
+    identifier_field: title
+    media_folder: /assets/images
+    public_folder: ../assets/images
+    slug: "{{slug}}"
+    filter:
+      field: type
+      value: announcement
+    preview_path: anuncios/{{filename}}.html
+    summary: "{{title}}"
+    fields:
+      - name: title
+        label: Título
+        widget: string
+        required: false
+        hint: Si se deja vacío, la CLI usará «Sin título».
+      - name: body
+        label: Texto
+        widget: markdown
+        modes:
+          - raw
+        required: true
+      - name: date
+        label: Fecha
+        widget: datetime
+        type: date
+        required: false
+        preview: false
+      - name: placement
+        label: Ubicación
+        widget: select
+        required: false
+        dropdown_threshold: 0
+        options:
+          - top
+          - bottom
+        preview: false
+      - name: language
+        label: Idioma
+        widget: select
+        required: false
+        dropdown_threshold: 0
+        options:
+          - label: Usar el idioma global
+            value: ""
+          - label: Español (México)
+            value: es-MX
+        preview: false
+      - name: slug
+        label: Slug
+        widget: string
+        required: false
+        pattern:
+          - ^[a-z0-9]+(?:-[a-z0-9]+)*$
+          - Solo minúsculas, números y guiones
+        hint: Opcional. Si lo dejas vacío, la CLI lo genera con el título.
+        preview: false
+      - name: type
+        label: Tipo
+        widget: hidden
+        default: announcement
+  - name: listas
+    label: Listas
+    label_singular: Lista
+    folder: listas
+    create: true
+    extension: md
+    format: frontmatter
+    identifier_field: title
+    media_folder: /assets/images
+    public_folder: ../assets/images
+    slug: "{{slug}}"
+    filter:
+      field: type
+      value: list
+    preview_path: "{{filename}}.html"
+    summary: "{{title}}"
+    fields:
+      - name: title
+        label: Título
+        widget: string
+        required: false
+        hint: Si se deja vacío, la CLI usará «Sin título».
+      - name: subtitle
+        label: Subtítulo
+        widget: string
+        required: false
+      - name: body
+        label: Texto
+        widget: markdown
+        modes:
+          - raw
+        required: true
+      - name: filter
+        label: Filtro
+        widget: object
+        required: false
+        hint: "Sólo para type: list."
+        fields:
+          - name: type
+            label: Tipo de documento
+            widget: select
+            required: false
+            dropdown_threshold: 0
+            options:
+              - file
+              - collection
+              - creator
+              - list
+          - name: creator
+            label: Autora
+            widget: relation
+            collection: creadoras
+            value_field: name
+            search_fields:
+              - name
+            display_fields:
+              - name
+            dropdown_threshold: 0
+            required: false
+          - name: date
+            label: Fecha
+            widget: object
+            required: false
+            fields:
+              - name: from
+                label: Desde
+                widget: datetime
+                type: date
+                required: false
+              - name: to
+                label: Hasta
+                widget: datetime
+                type: date
+                required: false
+          - name: keyword
+            label: Palabra clave
+            widget: relation
+            collection: palabras_clave
+            value_field: name
+            search_fields:
+              - name
+            display_fields:
+              - name
+            dropdown_threshold: 0
+            required: false
+          - name: path
+            label: Ruta
+            widget: string
+            required: false
+        preview: false
+      - name: order
+        label: Orden
+        widget: select
+        required: false
+        dropdown_threshold: 0
+        hint: "Sólo para type: list."
+        options:
+          - date-desc
+          - date-asc
+          - title-asc
+          - title-desc
+          - creator-asc
+        preview: false
+      - name: slug
+        label: Slug
+        widget: string
+        required: false
+        pattern:
+          - ^[a-z0-9]+(?:-[a-z0-9]+)*$
+          - Solo minúsculas, números y guiones
+        hint: Opcional. Si lo dejas vacío, la CLI lo genera con el título.
+        preview: false
+      - name: type
+        label: Tipo
+        widget: hidden
+        default: list
+  - name: intervenciones
+    label: Intervenciones
+    label_singular: Intervención
+    folder: intervenciones
+    create: true
+    extension: md
+    format: frontmatter
+    identifier_field: title
+    media_folder: /assets/images
+    public_folder: ../assets/images
+    slug: "{{slug}}"
+    filter:
+      field: type
+      value: intervention
+    editor:
+      preview: false
+    summary: "{{title}}"
+    fields:
+      - name: title
+        label: Título
+        widget: string
+        required: false
+        hint: Si se deja vacío, la CLI usará «Sin título».
+      - name: subtitle
+        label: Subtítulo
+        widget: string
+        required: false
+      - name: creator
+        label: Autora
+        widget: relation
+        collection: creadoras
+        value_field: name
+        search_fields:
+          - name
+        display_fields:
+          - name
+        dropdown_threshold: 0
+        multiple: true
+        required: false
+      - name: body
+        label: Texto
+        widget: markdown
+        modes:
+          - raw
+        required: false
+      - name: date
+        label: Fecha
+        widget: datetime
+        type: date
+        required: false
+        preview: false
+      - name: pages
+        label: Páginas
+        widget: number
+        required: false
+        min: 1
+        value_type: int
+        preview: false
+      - name: lineLength
+        label: Longitud de línea
+        widget: number
+        required: false
+        min: 0.1
+        max: 1
+        value_type: float
+        preview: false
+      - name: letterhead
+        label: Membrete
+        widget: list
+        required: false
+        preview: false
+      - name: letterheadHeight
+        label: Altura del membrete
+        widget: string
+        required: false
+        hint: "Ejemplo: 5cm, 50mm o 2in"
+        preview: false
+      - name: license
+        label: Licencia
+        widget: select
+        required: false
+        dropdown_threshold: 0
+        options: *a1
+        preview: false
+      - name: language
+        label: Idioma
+        widget: select
+        required: false
+        dropdown_threshold: 0
+        options:
+          - label: Usar el idioma global
+            value: ""
+          - label: Español (México)
+            value: es-MX
+        preview: false
+      - name: slug
+        label: Slug
+        widget: string
+        required: false
+        pattern:
+          - ^[a-z0-9]+(?:-[a-z0-9]+)*$
+          - Solo minúsculas, números y guiones
+        hint: Opcional. Si lo dejas vacío, la CLI lo genera con el título.
+        preview: false
+      - name: type
+        label: Tipo
+        widget: hidden
+        default: intervention
+  - name: menu
+    label: Menú
+    files:
+      - name: menu
+        label: Menú principal
+        file: menu.md
+        preview_path: menu.html
+        fields:
+          - name: links
+            label: Enlaces
+            widget: list
+            required: false
+            label_singular: Enlace
+            fields:
+              - name: name
+                label: Nombre
+                widget: string
+              - name: url
+                label: URL
+                widget: string
+          - name: type
+            label: Tipo
+            widget: hidden
+            default: menu
+  - name: palabras_clave
+    label: Palabras clave
+    label_singular: Palabra clave
+    description: Vocabulario reutilizable para el campo «Palabras clave». No genera contenido en el sitio.
+    folder: palabras-clave
+    extension: json
+    format: json
+    identifier_field: name
+    create: true
+    editor:
+      preview: false
+    fields:
+      - name: name
+        label: Palabra clave
+        widget: string
