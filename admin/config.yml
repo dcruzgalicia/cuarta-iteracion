@@ -1,6 +1,6 @@
 backend:
   name: github
-  repo: OWNER/cuarta-iteracion
+  repo: dcruzgalicia/cuarta-iteracion
   branch: main
   site_domain: cuarta-iteracion.netlify.app
   auth_scope: public_repo
