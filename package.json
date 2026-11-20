@@ -9,7 +9,7 @@
     "iteraciones-cli": "file:vendor/iteraciones-cli-0.28.0.tgz"
   },
   "devDependencies": {
-    "@sveltia/cms": "0.261.0",
+    "@sveltia/cms": "0.270.0",
     "netlify-plugin-cache": "1.0.3"
   }
 }
