@@ -7,7 +7,6 @@ backend:
   open_authoring: true
 site_url: https://cuarta-iteracion.netlify.app
 display_url: https://cuarta-iteracion.netlify.app
-show_preview_links: false
 publish_mode: editorial_workflow
 slug:
   encoding: ascii
