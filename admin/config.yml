@@ -37,7 +37,7 @@ collections:
     filter:
       field: type
       value: file
-    preview_path: textos/{{dirname}}/{{filename}}.html
+    preview_path: textos/{{dirname}}/{{fields.slug | default('{{fields.title | slugify}}-por-{{fields.creator.0 | slugify}}')}}.html
     summary: "{{title}} — {{creator}}"
     sortable_fields:
       - date
@@ -147,7 +147,7 @@ collections:
     filter:
       field: type
       value: creator
-    preview_path: textos/{{fields.slug}}/{{fields.slug}}.html
+    preview_path: textos/{{dirname}}/{{fields.slug | default('{{fields.name | slugify}}')}}.html
     summary: "{{name}}"
     fields:
       - name: name
